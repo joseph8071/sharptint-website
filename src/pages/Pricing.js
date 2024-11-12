@@ -1,18 +1,19 @@
-import { useState } from 'react';
-import { CheckIcon } from '@heroicons/react/24/solid';
-import { useAuth } from '../context/AuthContext';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import { CheckIcon } from '@heroicons/react/24/solid';
 
 function Pricing() {
-  const [loading, setLoading] = useState(false);
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
 
-  const prices = [
+  const plans = [
     {
       name: 'Monthly Subscription',
-      price: 29.99,
+      price: 99.99,
       priceId: process.env.REACT_APP_STRIPE_PRICE_ID,
+      interval: 'month',
       features: [
         'Full access to SharpTint software',
         'Pattern library',
@@ -22,48 +23,47 @@ function Pricing() {
     }
   ];
 
-  const handleSubscribe = async (priceId) => {
+  const handleSubscribe = (plan) => {
     if (!user) {
       navigate('/login');
       return;
     }
 
-    setLoading(true);
-    try {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/create_subscription`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`
-        },
-        body: JSON.stringify({
-          email: user.email,
-          priceId: priceId
-        }),
-      });
-      
-      const result = await response.json();
-      if (result.success) {
-        navigate('/checkout');
-      } else {
-        console.error('Subscription creation failed:', result.message);
-      }
-    } catch (error) {
-      console.error('Error:', error);
+    // Validate price ID
+    if (!plan.priceId) {
+      console.error('Price ID is missing:', plan);
+      setError('Invalid plan configuration');
+      return;
     }
-    setLoading(false);
+
+    // Store complete plan data
+    const planData = {
+      name: plan.name,
+      price: plan.price,
+      priceId: plan.priceId,
+      interval: plan.interval
+    };
+
+    console.log('Storing plan data:', planData);
+    sessionStorage.setItem('selectedPlan', JSON.stringify(planData));
+    navigate('/checkout');
   };
 
   return (
     <div className="max-w-7xl mx-auto py-12 px-4">
       <h2 className="text-3xl font-bold text-center mb-12">Choose Your Plan</h2>
+      {error && (
+        <div className="text-red-600 text-center mb-6 p-4 bg-red-50 rounded-md">
+          {error}
+        </div>
+      )}
       <div className="grid md:grid-cols-3 gap-8">
-        {prices.map((tier) => (
-          <div key={tier.name} className="border rounded-lg p-8">
-            <h3 className="text-xl font-semibold">{tier.name}</h3>
-            <p className="text-3xl font-bold mt-4">${tier.price}/mo</p>
+        {plans.map((plan) => (
+          <div key={plan.name} className="border rounded-lg p-8 shadow-lg">
+            <h3 className="text-xl font-semibold">{plan.name}</h3>
+            <p className="text-3xl font-bold mt-4">${plan.price}/mo</p>
             <ul className="mt-6 space-y-4">
-              {tier.features.map((feature) => (
+              {plan.features.map((feature) => (
                 <li key={feature} className="flex items-center">
                   <CheckIcon className="h-5 w-5 text-green-500 mr-2" />
                   {feature}
@@ -71,11 +71,10 @@ function Pricing() {
               ))}
             </ul>
             <button
-              onClick={() => handleSubscribe(tier.priceId)}
-              className="w-full mt-8 bg-blue-600 text-white py-2 rounded-md"
-              disabled={loading}
+              onClick={() => handleSubscribe(plan)}
+              className="w-full mt-8 bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700"
             >
-              {loading ? 'Processing...' : 'Subscribe Now'}
+              Subscribe Now
             </button>
           </div>
         ))}

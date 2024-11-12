@@ -9,6 +9,7 @@ import Checkout from './pages/Checkout';
 import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthProvider } from './context/AuthContext';
+import Dashboard from './pages/Dashboard';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
@@ -32,6 +33,7 @@ function App() {
                   </Elements>
                 } 
               />
+              <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </main>
           <Footer />

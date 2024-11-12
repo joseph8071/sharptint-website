@@ -41,6 +41,35 @@ export const login = async (credentials) => {
 };
 
 export const register = (userData) => api.post('/register', userData);
-export const checkout = (paymentData) => api.post('/create_subscription', paymentData);
+export const checkout = async (checkoutData) => {
+  if (!checkoutData.priceId) {
+    throw new Error('Price ID is required');
+  }
+
+  try {
+    console.log('Sending checkout request:', checkoutData);
+
+    const response = await api.post('/create_subscription', {
+      priceId: checkoutData.priceId,
+      paymentMethodId: checkoutData.paymentMethodId,
+      email: checkoutData.email,
+      planDetails: checkoutData.planDetails
+    });
+
+    console.log('Checkout response:', response.data);
+    
+    if (!response.data.success && !response.data.requiresAction) {
+      throw new Error(response.data.error || 'Failed to create subscription');
+    }
+    
+    return response;
+  } catch (error) {
+    console.error('Checkout API error:', error);
+    if (error.response?.data?.error) {
+      throw new Error(error.response.data.error);
+    }
+    throw error;
+  }
+};
 
 export default api;
