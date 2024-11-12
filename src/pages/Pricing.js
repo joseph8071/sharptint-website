@@ -15,7 +15,7 @@ function Pricing() {
     {
       name: 'Monthly Subscription',
       price: 29.99,
-      priceId: 'price_xxx', // Add your Stripe Price ID here
+      priceId: process.env.REACT_APP_STRIPE_PRICE_ID, // Add this to your .env file
       features: [
         'Full access to SharpTint software',
         'Pattern library',
@@ -33,22 +33,24 @@ function Pricing() {
 
     setLoading(true);
     try {
-      const response = await fetch('https://sharp-tint-ca9015f95653.herokuapp.com/create_subscription', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/create_subscription`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
           email: user.email,
-          priceId: priceId,
+          priceId: priceId
         }),
       });
       
-      const session = await response.json();
-      const stripe = await stripePromise;
-      await stripe.redirectToCheckout({
-        sessionId: session.id,
-      });
+      const result = await response.json();
+      if (result.success) {
+        navigate('/checkout');
+      } else {
+        console.error('Subscription creation failed:', result.message);
+      }
     } catch (error) {
       console.error('Error:', error);
     }
