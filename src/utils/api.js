@@ -5,7 +5,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true
+  withCredentials: false
 });
 
 // Add request interceptor for auth token
@@ -28,6 +28,17 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Update the login function to use axios directly
+export const login = async (credentials) => {
+  try {
+    const response = await api.post('/login', credentials);
+    return response.data;
+  } catch (error) {
+    console.error('Login error:', error);
+    throw error;
+  }
+};
 
 export const register = (userData) => api.post('/register', userData);
 export const checkout = (paymentData) => api.post('/create_subscription', paymentData);

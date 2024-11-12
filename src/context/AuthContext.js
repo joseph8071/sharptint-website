@@ -34,18 +34,19 @@ export function AuthProvider({ children }) {
 
   const login = async (credentials) => {
     try {
-      const response = await api.post('/login', credentials);
+      const response = await api.post('/login', {
+        email: credentials.email,
+        password: credentials.password
+      });
       
       if (response.data.success) {
         setUser({
           email: credentials.email
         });
         
-        // Store token if your backend sends one
-        if (response.data.token) {
-          localStorage.setItem('token', response.data.token);
-          api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
-        }
+        const tempToken = btoa(credentials.email);
+        localStorage.setItem('token', tempToken);
+        api.defaults.headers.common['Authorization'] = `Bearer ${tempToken}`;
         
         return { 
           success: true,
@@ -61,7 +62,7 @@ export function AuthProvider({ children }) {
       console.error('Login error:', error);
       return { 
         success: false, 
-        message: error.response?.data?.message || 'Login failed' 
+        message: error.response?.data?.message || 'Network error occurred' 
       };
     }
   };

@@ -18,7 +18,11 @@ function Login() {
     setError(null);
 
     try {
-      const result = await login(formData);
+      const result = await login({
+        email: formData.email,
+        password: formData.password
+      });
+      
       console.log('Login attempt result:', result);
       
       if (result.success) {
@@ -28,7 +32,7 @@ function Login() {
       }
     } catch (err) {
       console.error('Login error:', err);
-      setError(err.message || 'An unexpected error occurred');
+      setError('Network error occurred. Please try again.');
     } finally {
       setLoading(false);
     }
