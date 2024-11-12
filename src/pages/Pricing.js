@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { loadStripe } from '@stripe/stripe-js';
-import { CheckIcon } from '@heroicons/react/solid'; // You'll need to install @heroicons/react
+import { CheckIcon } from '@heroicons/react/24/solid'; // Updated import path
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 function Pricing() {
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const prices = [
     {
@@ -22,6 +26,11 @@ function Pricing() {
   ];
 
   const handleSubscribe = async (priceId) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    }
+
     setLoading(true);
     try {
       const response = await fetch('https://sharp-tint-ca9015f95653.herokuapp.com/create_subscription', {
@@ -30,7 +39,7 @@ function Pricing() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: user.email, // You'll need to implement user context/state
+          email: user.email,
           priceId: priceId,
         }),
       });

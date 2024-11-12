@@ -18,9 +18,12 @@ function Login() {
 
     try {
       const response = await login(formData);
-      // Store the token in localStorage
-      localStorage.setItem('token', response.data.token);
-      navigate('/pricing');
+      if (response.data.success) {
+        localStorage.setItem('token', response.data.token);
+        navigate('/pricing');
+      } else {
+        setError(response.data.message);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Login failed');
     } finally {

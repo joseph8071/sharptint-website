@@ -16,19 +16,26 @@ function App() {
   return (
     <AuthProvider>
       <Router>
-        <Elements stripe={stripePromise}>
-          <div className="App">
-            <Navbar />
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route path="/checkout" element={<Checkout />} />
+              <Route 
+                path="/checkout" 
+                element={
+                  <Elements stripe={stripePromise}>
+                    <Checkout />
+                  </Elements>
+                } 
+              />
             </Routes>
-            <Footer />
-          </div>
-        </Elements>
+          </main>
+          <Footer />
+        </div>
       </Router>
     </AuthProvider>
   );

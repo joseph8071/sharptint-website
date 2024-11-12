@@ -1,11 +1,15 @@
 import { useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 function CheckoutForm() {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -27,25 +31,25 @@ function CheckoutForm() {
         return;
       }
 
-      const response = await fetch('https://sharp-tint-ca9015f95653.herokuapp.com/create_subscription', {
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/create_subscription`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`
         },
         body: JSON.stringify({
           payment_method_id: paymentMethod.id,
-          email: 'customer@example.com', // Get this from form or user context
-          password: 'password123', // Get this from form
+          email: user.email
         }),
       });
 
       const result = await response.json();
       
-      if (result.error) {
-        setError(result.error);
+      if (result.success) {
+        // Handle successful subscription
+        navigate('/dashboard');
       } else {
-        // Handle successful payment
-        // Redirect to success page or show success message
+        setError(result.message);
       }
     } catch (err) {
       setError('An unexpected error occurred. Please try again.');

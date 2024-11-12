@@ -23,11 +23,16 @@ function Register() {
     setError(null);
 
     try {
-      await register({
+      const response = await register({
         email: formData.email,
         password: formData.password
       });
-      navigate('/login');
+      
+      if (response.data.success) {
+        navigate('/login');
+      } else {
+        setError(response.data.message);
+      }
     } catch (err) {
       setError(err.response?.data?.message || 'Registration failed');
     } finally {
