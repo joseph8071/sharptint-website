@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { login } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 function Login() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -17,15 +18,17 @@ function Login() {
     setError(null);
 
     try {
-      const response = await login(formData);
-      if (response.data.success) {
-        localStorage.setItem('token', response.data.token);
+      const result = await login(formData);
+      console.log('Login attempt result:', result);
+      
+      if (result.success) {
         navigate('/pricing');
       } else {
-        setError(response.data.message);
+        setError(result.message || 'Login failed');
       }
     } catch (err) {
-      setError(err.response?.data?.message || 'Login failed');
+      console.error('Login error:', err);
+      setError(err.message || 'An unexpected error occurred');
     } finally {
       setLoading(false);
     }

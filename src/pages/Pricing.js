@@ -1,10 +1,7 @@
 import { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-import { CheckIcon } from '@heroicons/react/24/solid'; // Updated import path
+import { CheckIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
-
-const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
 function Pricing() {
   const [loading, setLoading] = useState(false);
@@ -15,7 +12,7 @@ function Pricing() {
     {
       name: 'Monthly Subscription',
       price: 29.99,
-      priceId: process.env.REACT_APP_STRIPE_PRICE_ID, // Add this to your .env file
+      priceId: process.env.REACT_APP_STRIPE_PRICE_ID,
       features: [
         'Full access to SharpTint software',
         'Pattern library',

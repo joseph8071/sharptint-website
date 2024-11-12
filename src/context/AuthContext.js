@@ -33,16 +33,37 @@ export function AuthProvider({ children }) {
   }, []);
 
   const login = async (credentials) => {
-    const response = await api.post('/login', credentials);
-    if (response.data.success) {
-      const token = response.data.token;
-      localStorage.setItem('token', token);
-      api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      setUser({
-        email: credentials.email
-      });
+    try {
+      const response = await api.post('/login', credentials);
+      
+      if (response.data.success) {
+        setUser({
+          email: credentials.email
+        });
+        
+        // Store token if your backend sends one
+        if (response.data.token) {
+          localStorage.setItem('token', response.data.token);
+          api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+        }
+        
+        return { 
+          success: true,
+          message: response.data.message 
+        };
+      }
+      
+      return { 
+        success: false, 
+        message: response.data.message || 'Login failed' 
+      };
+    } catch (error) {
+      console.error('Login error:', error);
+      return { 
+        success: false, 
+        message: error.response?.data?.message || 'Login failed' 
+      };
     }
-    return response;
   };
 
   const logout = () => {
