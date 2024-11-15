@@ -15,8 +15,8 @@ function StripePricingTable() {
 
   return (
     <stripe-pricing-table 
-      pricing-table-id="prctbl_1QKUypQ6LVdCqG9SB3w9yOWV"
-      publishable-key="pk_test_51QKUhuQ6LVdCqG9Siu440hMKhDoTGfaNoVTsc5Vsn77i5pGHIoD4vxQ6GupDHhHttwQw3GnuFOi7Q6qfsVuETbO200mw9HlMM6">
+      pricing-table-id="prctbl_1QLYNaLUQJ5YJ8zYLO3nnvcD"
+      publishable-key="pk_live_51NupCmLUQJ5YJ8zYRGStzYnOGaWgWTWBRgUVGprNSgaY721Zie3WJloqpsPPu7d1ktXxdteTBE7TrTtn5RYDa2b800QKEnMVyL">
     </stripe-pricing-table>
   );
 }
