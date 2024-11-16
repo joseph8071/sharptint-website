@@ -1,6 +1,21 @@
 import { CheckIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 function PricingCard({ title, price, features, onSubscribe, loading }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleSubscribe = () => {
+    if (!user) {
+      // Redirect to login or registration if not logged in
+      navigate('/login');
+    } else {
+      // Call the onSubscribe function if the user is logged in
+      onSubscribe();
+    }
+  };
+
   return (
     <div className="bg-white rounded-2xl shadow-xl overflow-hidden transform transition-all hover:scale-105">
       <div className="px-6 py-8 bg-gradient-to-br from-blue-500 to-blue-600 sm:p-10 sm:pb-6">
@@ -26,7 +41,7 @@ function PricingCard({ title, price, features, onSubscribe, loading }) {
           ))}
         </ul>
         <button
-          onClick={onSubscribe}
+          onClick={handleSubscribe}
           disabled={loading}
           className="mt-8 w-full bg-blue-600 text-white py-3 px-6 rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
         >

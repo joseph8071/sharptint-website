@@ -34,38 +34,6 @@ function Home() {
           </div>
         </div>
       </div>
-
-      {/* Features Section */}
-      <div className="py-12 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Precise Calculations
-              </h3>
-              <p className="text-gray-600">
-                Get accurate measurements and calculations for any window tinting project.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Pattern Library
-              </h3>
-              <p className="text-gray-600">
-                Access our extensive library of window patterns and specifications.
-              </p>
-            </div>
-            <div className="p-6 bg-gray-50 rounded-lg">
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                Project Management
-              </h3>
-              <p className="text-gray-600">
-                Track and manage all your tinting projects in one place.
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }
