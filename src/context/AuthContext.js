@@ -9,24 +9,11 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (token) {
+    const userData = localStorage.getItem('user');
+    if (token && userData) {
       api.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-      api.get('/get_license_key')
-        .then(response => {
-          if (response.data.success) {
-            setUser({
-              email: response.data.email,
-              licenseKey: response.data.license_key
-            });
-          }
-        })
-        .catch(() => {
-          localStorage.removeItem('token');
-          delete api.defaults.headers.common['Authorization'];
-        })
-        .finally(() => {
-          setLoading(false);
-        });
+      setUser(JSON.parse(userData));
+      setLoading(false);
     } else {
       setLoading(false);
     }
@@ -40,10 +27,9 @@ export function AuthProvider({ children }) {
       });
       
       if (response.data.success) {
-        setUser({
-          email: credentials.email
-        });
-        
+        const userData = { email: credentials.email };
+        setUser(userData);
+        localStorage.setItem('user', JSON.stringify(userData));
         const tempToken = btoa(credentials.email);
         localStorage.setItem('token', tempToken);
         api.defaults.headers.common['Authorization'] = `Bearer ${tempToken}`;
@@ -69,6 +55,7 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     delete api.defaults.headers.common['Authorization'];
     setUser(null);
   };

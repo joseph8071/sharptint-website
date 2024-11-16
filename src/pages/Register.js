@@ -1,9 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { register } from '../utils/api';
+import { useAuth } from '../context/AuthContext';
 
 function Register() {
   const navigate = useNavigate();
+  const { login } = useAuth();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -29,7 +31,8 @@ function Register() {
       });
       
       if (response.data.success) {
-        navigate('/login');
+        await login({ email: formData.email, password: formData.password });
+        navigate('/pricing');
       } else {
         setError(response.data.message);
       }
