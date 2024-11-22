@@ -3,7 +3,6 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import PricingDetails from './pages/PricingDetails';
-import Subscribe from './pages/Subscribe';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Checkout from './pages/Checkout';
@@ -11,6 +10,8 @@ import { Elements } from '@stripe/react-stripe-js';
 import { loadStripe } from '@stripe/stripe-js';
 import { AuthProvider } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
+import About from './pages/About';
+import StripePricingTable from './components/StripePricingTable';
 
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY);
 
@@ -23,18 +24,11 @@ function App() {
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
               <Route path="/pricing" element={<PricingDetails />} />
-              <Route path="/subscribe" element={<Subscribe />} />
+              <Route path="/subscribe" element={<StripePricingTable />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
-              <Route 
-                path="/checkout" 
-                element={
-                  <Elements stripe={stripePromise}>
-                    <Checkout />
-                  </Elements>
-                } 
-              />
               <Route path="/dashboard" element={<Dashboard />} />
             </Routes>
           </main>

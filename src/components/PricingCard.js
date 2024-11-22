@@ -2,18 +2,17 @@ import { CheckIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 
-function PricingCard({ title, price, features, onSubscribe, loading }) {
+function PricingCard({ title, price, features, loading }) {
   const { user } = useAuth();
   const navigate = useNavigate();
 
   const handleSubscribe = () => {
     if (!user) {
-      // Redirect to login or registration if not logged in
       navigate('/login');
-    } else {
-      // Call the onSubscribe function if the user is logged in
-      onSubscribe();
+      return;
     }
+    // Redirect to the Stripe pricing table
+    navigate('/subscribe');
   };
 
   return (

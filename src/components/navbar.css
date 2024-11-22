@@ -1,0 +1,21 @@
+/* Base navbar styles */
+.nav-link {
+  @apply text-gray-600 hover:text-gray-900 px-3 py-2 text-sm font-medium;
+}
+
+.btn-primary {
+  @apply bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 text-sm font-medium;
+}
+
+/* User menu styles */
+.user-menu-button {
+  @apply w-8 h-8 rounded-full bg-blue-600 text-white flex items-center justify-center hover:bg-blue-700 focus:outline-none;
+}
+
+.dropdown-menu {
+  @apply absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 ring-1 ring-black ring-opacity-5 focus:outline-none z-50;
+}
+
+.dropdown-item {
+  @apply block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100;
+}

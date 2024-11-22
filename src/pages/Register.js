@@ -43,6 +43,18 @@ function Register() {
     }
   };
 
+  const validatePassword = (password) => {
+    const requirements = {
+      minLength: password.length >= 8,
+      hasUpperCase: /[A-Z]/.test(password),
+      hasLowerCase: /[a-z]/.test(password),
+      hasNumber: /\d/.test(password),
+      hasSpecialChar: /[!@#$%^&*]/.test(password),
+    };
+    
+    return requirements;
+  };
+
   return (
     <div className="max-w-md mx-auto mt-10 p-6 bg-white rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-6">Register</h2>
